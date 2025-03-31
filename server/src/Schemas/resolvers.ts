@@ -9,6 +9,16 @@ interface UserArgs {
     username: string;
 }
 
+interface AddUserArgs{
+input: {
+
+    username: string;
+    email: string;
+    password: string;
+}
+
+}
+
 const resolvers = {
 
     Query: {
@@ -31,6 +41,22 @@ const resolvers = {
 
     },
     Mutation: {
+        //create a user a token, and send it back(client/src/compenents/SignUpForm.js)
+        createUser: async (_parent: any, {input}: AddUserArgs) =>{
+            const user = await User.create({...input});
+
+            if(!user)
+            {
+                 throw new AuthenticationError('Something is Wrong!');
+            }
+            const token = signToken(user.username, user.email, user._id);
+
+
+            return {token, user}
+
+
+
+        },
 
 
     },
