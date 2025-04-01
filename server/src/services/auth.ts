@@ -11,7 +11,7 @@ interface JwtPayload {
 }
 
 //export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-export const AuthenticationToken = ({req}: any) =>{
+export const authenticationToken = ({req}: any) =>{
  const authHeader = req.headers.authorization;
  const bodyToken =  req.body.token;
  const queryToken = req.query.token;
