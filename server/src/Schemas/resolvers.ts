@@ -1,5 +1,5 @@
 //import { Query } from 'mongoose';
-import { Book, User } from '../models/index.js';
+import { User } from '../models/index.js';
 
 import { signToken, AuthenticationError } from '../services/auth.js';
 
@@ -17,6 +17,11 @@ input: {
     password: string;
 }
 
+}
+
+interface LoginUserArgs{
+    email: string;
+    password: string;
 }
 
 const resolvers = {
@@ -38,11 +43,23 @@ const resolvers = {
             return foundUser;
         },
 
+        users: async() =>{
+            try{
+                const users = await User.find({});
+                return users;
+            }
+            catch(err){
+                console.log(err);
+                return err;
+
+            }
+        }
+
 
     },
     Mutation: {
         //create a user a token, and send it back(client/src/compenents/SignUpForm.js)
-        createUser: async (_parent: any, {input}: AddUserArgs) =>{
+       addUser: async (_parent: any, {input}: AddUserArgs) =>{
             const user = await User.create({...input});
 
             if(!user)
@@ -52,11 +69,33 @@ const resolvers = {
             const token = signToken(user.username, user.email, user._id);
 
 
-            return {token, user}
+            return {token, user};
 
 
 
         },
+
+        //login a user, sign a token and send it back back(client/src/compenents/SignUpForm.js)
+        login: async (_parent: any, {email,password}: LoginUserArgs) =>{
+
+            const user = await User.findOne({email});
+
+            if (!user){
+                throw new AuthenticationError("Can't find this user");
+            }
+
+            const correctPw = await user.isCorrectPassword(password);
+
+            if(!correctPw){
+
+                throw new AuthenticationError("Wrong password!")
+            }
+
+            const token = signToken(user.username, user.email, user._id);
+
+            return {token, user};
+        },
+        
 
 
     },
