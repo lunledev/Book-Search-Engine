@@ -5,6 +5,14 @@ import { Outlet } from 'react-router-dom';
 
 import Navbar from './components/Navbar';
 
+//create http link to GraphQl endpoint
+const httpLink = createHttpLink({
+  uri: '/graphql',
+});
+
+
+
+
 function App() {
   return (
     <>
