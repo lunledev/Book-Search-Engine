@@ -16,7 +16,18 @@ export const LOGIN_USER = gql`
 
 `;
 
-export const ADD_USER = gql``;
+export const ADD_USER = gql`
+    mutation addUser($input: UserInput!){
+    addUser(input: $input) {
+       user {
+          username
+          _id
+       }
+       token
+    
+    }
+}
+`;
 
 export const SAVE_BOOK = gql``;
 
