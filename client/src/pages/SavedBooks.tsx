@@ -2,12 +2,16 @@
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 
 //import { getMe, deleteBook } from '../utils/API';
+//import { deleteBook } from '../utils/API';
 import Auth from '../utils/auth';
-import { removeBookId, saveBookIds } from '../utils/localStorage';
+import {removeBookId} from '../utils/localStorage';
 import type { User } from '../models/User';
+import type { Book } from '../models/Book';
 
-import {useQuery, useMutation} from '@apollo/client';
+//import {useQuery, useMutation} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/client';
 import { GET_ME } from '../utils/queries';
+import { REMOVE_BOOK } from '../utils/mutations';
 
 
 /*const SavedBooks = () => {
@@ -19,12 +23,10 @@ import { GET_ME } from '../utils/queries';
   });*/
   const SavedBooks = () => {
     const {loading, data} = useQuery(GET_ME);
+    const [removeBook] = useMutation(REMOVE_BOOK);
 
-    const userData = data?.me || {saveBook:[saveBookIds]};
+    const userData:User = data?.me || {};
 
-    if(loading) {
-      return <div>Loading...</div>;
-    }
 
     
 
@@ -68,14 +70,17 @@ import { GET_ME } from '../utils/queries';
     }
 
     try {
-      const response = await deleteBook(bookId, token);
+      //const response = await deleteBook(bookId, token);
+      const response = await removeBook
+      
+     ( {variables: {bookId, token}});
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error('something went wrong!');
       }
 
-      const updatedUser = await response.json();
-      setUserData(updatedUser);
+     // const updatedUser = await response.json();
+     // setUserData(updatedUser);
       // upon success, remove book's id from localStorage
       removeBookId(bookId);
     } catch (err) {
@@ -84,7 +89,7 @@ import { GET_ME } from '../utils/queries';
   };
 
   // if data isn't here yet, say so
-  if (!userDataLength) {
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 
@@ -108,7 +113,7 @@ import { GET_ME } from '../utils/queries';
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {userData.savedBooks.map((book:Book) => {
             return (
               <Col md='4'>
                 <Card key={book.bookId} border='dark'>
