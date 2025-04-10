@@ -72,8 +72,7 @@ import { REMOVE_BOOK } from '../utils/mutations';
     try {
       //const response = await deleteBook(bookId, token);
       const response = await removeBook
-      
-     ( {variables: {bookId, token}});
+      ( {variables: {bookId, token}});
 
       if (!response) {
         throw new Error('something went wrong!');
