@@ -60,7 +60,7 @@ const resolvers = {
         me : async (_parent: any, _args: any, context:any) =>{
 
             if(context.user){ 
-                return User.findOne({_id: context.user.id}).populate("books");
+                return User.findOne({_id: context.user._id}).populate("books");
             }
             throw new AuthenticationError('Could not authenticate user.');
 
