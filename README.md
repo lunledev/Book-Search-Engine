@@ -8,7 +8,7 @@ A avid reader who wants to keep list of books to purchase and search for new boo
 
 ## Installation
 
-npm run render-build and npm run develop to locally.
+npm run render-build and npm run develop to run locally.
 
 ## Usage
 
